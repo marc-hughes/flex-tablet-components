@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Button xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  label="{value}"		  
+		  >
+	<fx:Metadata>
+		[Event(name="valueChange",type="flash.events.Event")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			
+			import spark.events.PopUpEvent;
+			public static const VALUE_CHANGE_EVENT:String = "valueChange";
+ private var _value:int;
+			public var max:int = 500;
+			public var min:int = 0;
+
+			[Bindable(event="valueChange")]
+			public function get value():int
+			{
+				return _value;
+			}
+
+			public function set value(value:int):void
+			{
+				if( value < min ) value = min;
+				if( value > max ) value = max;
+				
+				if (_value != value)
+				{					
+					_value = value;
+					dispatchEvent(new Event(VALUE_CHANGE_EVENT));
+				}
+			}
+
+			
+			private var popup:NumericPickerPopup;
+			
+			override protected function clickHandler(event:MouseEvent):void
+			{
+				super.clickHandler(event);
+				if( ! popup )
+				{
+					popup = new NumericPickerPopup();
+					popup.addEventListener(PopUpEvent.CLOSE, onPopupClose);
+					popup.addEventListener("mouseDownOutside",onMouseDownOutside);
+				}
+				popup.min = min;
+				popup.max = max;
+				popup.value = value;
+				popup.open(this);	
+				var p:Point = localToGlobal( new Point(0,0) );
+				popup.x = p.x - popup.width/2 + width/2;
+				popup.y = p.y;
+				
+				
+			}
+
+			private function onMouseDownOutside(event:Event):void
+			{
+				if( popup && popup.parent )
+				{
+					value = popup.value;
+					popup.close();
+				}				
+			}
+
+			private function onPopupClose(event:PopUpEvent):void
+			{
+				value = popup.value;
+			}
+			
+		]]>
+	</fx:Script>
+</s:Button>

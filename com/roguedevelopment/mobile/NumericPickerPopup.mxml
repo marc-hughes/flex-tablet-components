@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						   xmlns:s="library://ns.adobe.com/flex/spark" 
+						   width="300" height="160"
+						   mouseUp="plus_mouseUpHandler(event)"
+						   mouseOut="plus_mouseUpHandler(event)"
+						   >
+	<fx:Script>
+		<![CDATA[
+			import flash.utils.clearInterval;
+			import flash.utils.clearTimeout;
+			import flash.utils.setInterval;
+			import flash.utils.setTimeout;
+			[Bindable] public var value : int;
+			
+			private var dir:int = 0;
+			
+			public var max:int = 500;
+			public var min:int = 0;
+			
+			private var timeout:uint = 0;
+			private var interval:uint = 0;
+			private const REPEAT_DELAY:int = 600;
+			
+			protected function plus_touchBeginHandler(event:TouchEvent):void
+			{
+				downAction(1);
+			}
+
+			private function downAction(direction:int):void
+			{
+				clearTimers();
+				dir = direction;
+				incrementValue();
+				timeout = setTimeout( startRepeater, REPEAT_DELAY );
+			}
+
+			
+			protected function plus_mouseDownHandler(event:MouseEvent):void
+			{
+				downAction(1);				
+			}
+			
+			protected function plus_touchEndHandler(event:TouchEvent):void
+			{
+				upAction();				
+			}
+
+			private function upAction():void
+			{
+				clearTimers();
+			}
+
+			
+			protected function plus_mouseUpHandler(event:MouseEvent):void
+			{
+				upAction();				
+			}
+			
+			protected function minus_touchBeginHandler(event:TouchEvent):void
+			{
+				downAction(-1);				
+			}
+			
+			protected function minus_mouseDownHandler(event:MouseEvent):void
+			{
+				downAction(-1);				
+			}
+			
+			protected function minus_touchEndHandler(event:TouchEvent):void
+			{
+				upAction();
+				
+			}
+			
+			protected function minus_mouseUpHandler(event:MouseEvent):void
+			{
+				upAction();				
+			}
+			
+			private function incrementValue():void
+			{				
+				value += dir;	
+				if( value < min ) value = min;
+				if( value > max ) value = max;
+			}
+			
+			private function startRepeater():void
+			{
+				clearTimers();
+				interval = setInterval( incrementValue, 50 );
+			}
+
+			private function clearTimers():void
+			{
+				clearTimeout( timeout );
+				clearInterval( interval );
+			}
+
+			
+			protected function close_clickHandler(event:MouseEvent):void
+			{
+				close(true);				
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Rect width="100%" height="100%" radiusX="5" radiusY="5">
+		<s:fill>
+			<s:SolidColor color="#ffffff" />
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="#444444" weight="4" />
+		</s:stroke>
+	</s:Rect>
+
+	<s:HGroup verticalAlign="middle" gap="10" left="30" top="30">
+		<s:Label textAlign="right" width="50" text="{value}" fontSize="32" />
+		<s:VGroup>
+			<s:Button width="60" label="+" touchBegin="plus_touchBeginHandler(event)" mouseDown="plus_mouseDownHandler(event)" touchEnd="plus_touchEndHandler(event)" mouseUp="plus_mouseUpHandler(event)" />
+			<s:Button width="60" label="−" touchBegin="minus_touchBeginHandler(event)" mouseDown="minus_mouseDownHandler(event)" touchEnd="minus_touchEndHandler(event)" mouseUp="minus_mouseUpHandler(event)" />			
+		</s:VGroup>
+	</s:HGroup>
+	<s:Button label="Close" right="15" bottom="15" click="close_clickHandler(event)" /> 
+		
+</s:SkinnablePopUpContainer>

@@ -7,9 +7,10 @@
 		 		width="440"
 				 xmlns:s="library://ns.adobe.com/flex/spark" xmlns:components="spark.components.*"
 				 >
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-	</fx:Declarations>
+	<fx:Metadata>
+		[Event(name="datePickerSet", type="com.flexets.android.views.components.DatePickerEvent")]
+		[Event(name="datePickerCancel", type="com.flexets.android.views.components.DatePickerEvent")]
+	</fx:Metadata>
 
 	<s:BorderContainer backgroundColor="0x444444" width="100%" borderColor="0xcccccc" borderWeight="4" cornerRadius="10">
 		<s:Rect left="12" top="12" width="415" height="45" radiusX="4" radiusY="4">
